@@ -3,14 +3,21 @@ package com.bridgelabz;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.HashMap;
+
 import static org.junit.Assert.assertEquals;
 
 public class InvoiceServiceTest {
     InvoiceGenerator invoice;
+    RideRepository rideRepository = new RideRepository();
+    HashMap<Integer, Ride[]> rideRepo;
     @Before
     public void initialization() {
+
         invoice = new InvoiceGenerator();
+        rideRepo = rideRepository.getRideRepo();
     }
+
 
     // UC1 : Calculate Fare
     @Test
@@ -50,6 +57,23 @@ public class InvoiceServiceTest {
         InvoiceSummary summary = invoice.calculateFareEnhanced(rides);
         InvoiceSummary expectedInvoiceSummary = new InvoiceSummary(2, 30, 15);
         assertEquals(summary, expectedInvoiceSummary);
+    }
+
+    // UC 4 : With User-Id get the list from Repo and return invoice.
+    @Test
+    public void GivenUserId_getListOfRideFromRepo_returnInvoice() {
+
+        Ride[] rides1 = { new Ride(0.1, 2), new Ride(10, 3) };
+        Ride[] rides2 = { new Ride(3, 2), new Ride(1, 3), new Ride(150, 300) };
+        Ride[] rides3 = { new Ride(5, 7) };
+
+        rideRepo.put(1, rides1);
+        rideRepo.put(2, rides2);
+        rideRepo.put(3, rides3);
+
+        InvoiceSummary invoices = new InvoiceSummary(3, 1845, 615);
+
+        assertEquals(invoices, invoice.calculateFareEnhanced(2, rideRepo));
     }
 
 }

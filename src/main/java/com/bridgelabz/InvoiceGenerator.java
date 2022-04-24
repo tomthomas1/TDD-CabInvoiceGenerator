@@ -1,5 +1,8 @@
 package com.bridgelabz;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class InvoiceGenerator {
     private static final double MINIMUM_COST_PER_KILOMETER = 10;
     private static final int COST_PER_TIME = 1;
@@ -29,5 +32,15 @@ public class InvoiceGenerator {
             totalFare += this.calculateFare(ride.distance, ride.time);
         }
         return new InvoiceSummary(rides.length, totalFare, totalFare/ rides.length);
+    }
+
+    // Method to add multiple users and calculate enhanced fare
+    public InvoiceSummary calculateFareEnhanced(int i, HashMap<Integer, Ride[]> rideRepo) {
+
+        for (Map.Entry<Integer, Ride[]> rideEntry : rideRepo.entrySet()) {
+            if (rideEntry.getKey() == i)
+                return calculateFareEnhanced(rideEntry.getValue());
+        }
+        return null;
     }
 }
